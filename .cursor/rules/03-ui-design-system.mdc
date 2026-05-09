@@ -1,0 +1,71 @@
+---
+description: UI and design rules for ObraRentable OS
+alwaysApply: true
+---
+
+# UI Design Rules
+
+## Visual direction
+
+ObraRentable OS should feel:
+
+- mobile-first
+- clean
+- practical
+- professional
+- calm
+- financial
+- easy for non-technical tradespeople
+
+## Style
+
+Use:
+
+- white/light-gray backgrounds
+- strong blue primary color
+- dark navy text
+- rounded white cards
+- subtle borders
+- minimal shadows
+- clear status colors
+- compact financial metrics
+- large readable numbers
+- clear CTAs
+
+Status color meaning:
+
+- green = healthy / profitable / paid
+- yellow = pending / attention
+- red = overdue / risk / margin problem
+- gray = neutral / draft / inactive
+
+## Mobile-first
+
+Mobile is the primary experience.
+
+The app should work well for a tradesperson using a phone during the workday.
+
+Desktop can exist for accountant/admin workflows, but mobile comes first.
+
+## Components
+
+Prefer reusable components:
+
+- MetricCard
+- AlertCard
+- ProjectCard
+- StatusBadge
+- ProgressBar
+- MoneyField
+- SectionHeader
+- EmptyState
+- QuickActionCard
+- FinancialSummaryCard
+
+## Avoid
+
+- clutter
+- giant tables on mobile
+- too many navigation options
+- decorative UI that does not help decision-making
+- hardcoded mock data inside components

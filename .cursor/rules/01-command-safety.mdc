@@ -1,0 +1,68 @@
+---
+description: Safe command and edit rules for coding agents
+alwaysApply: true
+---
+
+# Command Safety Rules
+
+## Allowed without asking
+
+Agents may run:
+
+- npm run lint
+- npm run build
+- npm run check
+- npx tsc --noEmit
+- git status
+- git status --short --untracked-files=all
+- git diff
+- git diff --stat
+- git diff --name-only
+- git log --oneline -5
+- git branch --show-current
+
+Read-only command chains are allowed only when every command is listed above.
+
+## Allowed normal edits
+
+Agents may directly edit/create files within approved scope:
+
+- app files for approved routes
+- components files for approved features
+- lib files for approved helpers/store/mock data
+- types files for approved domain models
+- docs files
+- .cursor/rules files
+- .claude/agents files
+
+## Ask before
+
+Always ask before:
+
+- npm install
+- dependency updates
+- modifying package.json
+- changing lockfiles intentionally
+- git add
+- git commit
+- git push
+- git checkout
+- git merge
+- git rebase
+- git reset
+- git clean
+- deleting major folders
+- destructive shell commands
+- changing .env files
+- database migrations against real Supabase
+- Vercel deploys
+- production/staging changes
+- broad architecture renames
+- replacing the LocalOps modular foundation
+
+## Never do silently
+
+- Do not expose service role keys.
+- Do not add API keys to source files.
+- Do not commit secrets.
+- Do not run destructive cleanup commands without approval.

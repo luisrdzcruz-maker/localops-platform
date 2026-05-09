@@ -1,0 +1,3 @@
+import { Card } from "@/components/ui/Card";
+import { constructionEstimates } from "@/lib/mock/construction";
+export function EstimatePreview() { const e = constructionEstimates[0]; return <Card><h2 className="text-lg font-semibold">Estimate preview</h2><p className="text-sm text-slate-500">{e.number} · {e.status}</p><div className="mt-4 rounded-xl bg-slate-50 p-4"><div className="flex justify-between"><span>Subtotal</span><strong>€{e.subtotal}</strong></div><div className="flex justify-between"><span>VAT</span><strong>{Math.round(e.vatRate*100)}%</strong></div><div className="mt-2 flex justify-between text-lg"><span>Total</span><strong>€{e.total}</strong></div></div></Card>; }

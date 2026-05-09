@@ -1,0 +1,2 @@
+import Link from "next/link";
+export function VerticalSwitcher() { return <div className="hidden gap-2 md:flex"><Link href="/verticals/construction" className="rounded-xl bg-obra-50 px-3 py-2 text-xs font-semibold text-obra-700">Obra</Link><Link href="/verticals/dental" className="rounded-xl bg-cyan-50 px-3 py-2 text-xs font-semibold text-cyan-700">Dental</Link><Link href="/verticals/pharma" className="rounded-xl bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700">Pharma</Link></div>; }

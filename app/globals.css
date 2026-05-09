@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+:root { color-scheme: light; }
+body { margin: 0; background: #f6f8fb; color: #111827; }
+a { color: inherit; text-decoration: none; }
+* { box-sizing: border-box; }

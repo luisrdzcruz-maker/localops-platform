@@ -1,0 +1,66 @@
+---
+description: English-first internal architecture rule
+alwaysApply: true
+---
+
+# English-First Architecture Rule
+
+All internal architecture must be English-first.
+
+Use English for:
+
+- file names
+- folder names
+- route segments where practical
+- TypeScript types
+- interfaces
+- enums
+- function names
+- variable names
+- helper names
+- database table names
+- database column names
+- permission keys
+- automation trigger keys
+- AI action keys
+- integration provider keys
+- technical documentation
+
+Spanish is allowed only for user-facing copy:
+
+- visible UI labels
+- buttons
+- headings
+- empty states
+- marketing copy
+- demo customer/project names
+- Spanish product positioning shown to users
+
+## Good examples
+
+Use:
+
+- ConstructionProject
+- SupplierExpense
+- CustomerPayment
+- IssuedInvoice
+- MonthlyFinancialReport
+- AccountantExportPackage
+- calculateGrossMargin()
+- getPendingPaymentsTotal()
+- createInvoice()
+
+Avoid for architecture:
+
+- Obra
+- Gasto
+- Cobro
+- FacturaEmitida
+- PaqueteGestor
+- calcularMargen()
+
+## Existing Spanish names
+
+Do not perform broad naming refactors without approval.
+
+If Spanish internal names already exist, keep working code stable and flag them for a controlled cleanup later.

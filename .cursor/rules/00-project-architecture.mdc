@@ -1,0 +1,67 @@
+---
+description: Core architecture rules for LocalOps Platform and ObraRentable OS
+alwaysApply: true
+---
+
+# Project Architecture Rules
+
+This repository contains **LocalOps Platform**, a modular multi-tenant SaaS foundation for micro-SME operating systems.
+
+The first focused product layer is **ObraRentable OS**, built on top of the internal `construction` vertical.
+
+## Architecture hierarchy
+
+- LocalOps Platform = shared modular foundation
+- construction vertical = internal technical vertical key
+- ReformOps = internal/commercial construction vertical concept
+- ObraRentable OS = user-facing product name for the first MVP
+
+## Core principles
+
+- Do not build separate apps for each vertical.
+- Keep one shared modular foundation.
+- Do not remove Pharma or Dental architecture.
+- ObraRentable may be the visible MVP, but the platform must remain extensible.
+- Shared systems should remain reusable:
+  - auth-ready architecture
+  - organization model
+  - permissions
+  - documents
+  - automations
+  - integrations
+  - AI usage tracking
+  - UI primitives
+  - mock/session store patterns
+
+## Current MVP mode
+
+The current ObraRentable MVP is mock/session-store based.
+
+Do not implement without explicit approval:
+
+- real Supabase persistence
+- real Supabase Auth
+- real OCR
+- real AI API calls
+- real payments
+- real email/WhatsApp
+- real accounting integrations
+- real tax filing
+- real Unycop integration
+
+## Safe implementation pattern
+
+Preferred sequence:
+
+1. Product spec
+2. Types
+3. Mock data
+4. Pure calculation helpers
+5. Session/demo store
+6. UI slice
+7. Typecheck/build
+8. QA summary
+
+Avoid broad rewrites.
+Avoid changing architecture to fit one page.
+Avoid hardcoding business logic inside UI components.

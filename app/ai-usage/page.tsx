@@ -1,0 +1,3 @@
+import { AppShell } from "@/components/shell/AppShell";
+import { AiCreditMeter } from "@/components/ai/AiCreditMeter";import { AiUsageTable } from "@/components/ai/AiUsageTable";import { aiActionCosts } from "@/lib/ai/actions";import { AiActionCard } from "@/components/ai/AiActionCard";
+export default function Page() { return <AppShell><div className="space-y-6"><h1 className="text-2xl font-bold">AI Usage & Credits</h1><AiCreditMeter /><div className="grid gap-3 md:grid-cols-3">{aiActionCosts.slice(0,6).map(action => <AiActionCard key={action.key} action={action} />)}</div><AiUsageTable /></div></AppShell>; }

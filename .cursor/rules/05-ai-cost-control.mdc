@@ -1,0 +1,63 @@
+---
+description: AI/OCR cost-control rules
+alwaysApply: true
+---
+
+# AI Cost-Control Rules
+
+AI and OCR features must be treated as metered resources.
+
+Never implement unlimited AI/OCR usage.
+
+## Current MVP
+
+No real AI calls.
+No real OCR.
+No real document processing.
+No real image analysis.
+
+Use placeholders only.
+
+## Future rule
+
+Before any AI/OCR action:
+
+1. estimate usage
+2. check organization limit
+3. check action permission
+4. check file/batch size
+5. execute action
+6. record usage
+7. deduct credits
+
+## Trial limits
+
+Suggested trial constraints:
+
+- 25 AI credits per organization
+- no bulk processing
+- max 5 documents/photos
+- max 3 AI-generated estimates
+- max file size 5 MB
+- max PDF pages 10
+
+## Dangerous features
+
+Do not implement without explicit approval:
+
+- processing 200 invoices
+- unlimited receipt scanning
+- unlimited image analysis
+- background AI processing loops
+- auto-regeneration without user action
+- large PDF ingestion
+- batch OCR in free trial
+
+## UI requirement
+
+When showing future AI/OCR features, mention:
+
+- credits
+- plan limits
+- placeholder state
+- paid feature where appropriate

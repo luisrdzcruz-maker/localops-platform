@@ -1,0 +1,78 @@
+---
+description: Product rules for ObraRentable OS
+alwaysApply: true
+---
+
+# ObraRentable OS Product Rules
+
+ObraRentable OS is the first focused product layer on LocalOps Platform.
+
+## Target customer
+
+Solo professionals and micro-businesses of 1–5 people in trades and small renovation work:
+
+- small reformistas
+- electricians
+- plumbers
+- painters
+- installers
+- carpenters
+- maintenance technicians
+- small trade teams
+
+These users often rely on:
+
+- WhatsApp
+- paper notes
+- photos of receipts
+- Excel
+- invoice templates
+- folders
+- accountants/gestorías
+- manual monthly paperwork
+
+## Product positioning
+
+ObraRentable OS is not an enterprise construction ERP and not a generic CRM.
+
+It is a simple financial/admin cockpit for small trades businesses.
+
+Core promise:
+
+“Menos Excel, menos papeles, menos olvidos. Trabajos, presupuestos, facturas, gastos, cobros y reports para tu gestor en una sola app.”
+
+## MVP modules
+
+Prioritize:
+
+- jobs/projects
+- estimates
+- issued invoices
+- expenses
+- supplier tickets/received invoices
+- customer payments
+- monthly reports
+- accountant/export package
+- company settings
+
+## UX principle
+
+The app should feel simple enough for a solo electrician, plumber, painter or small reformista.
+
+Avoid:
+
+- enterprise language
+- complex CRM workflows
+- heavy dashboards
+- ERP-style complexity
+- accounting jargon unless necessary
+
+Prioritize:
+
+- current active job
+- this month’s financial clarity
+- unpaid invoices
+- pending payments
+- missing tickets
+- margin by job
+- accountant-ready output

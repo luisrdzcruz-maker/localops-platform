@@ -1,0 +1,1 @@
+export function Tabs({ items }: { items: string[] }) { return <div className="flex gap-2 rounded-2xl bg-slate-100 p-1">{items.map(item => <span key={item} className="rounded-xl px-3 py-1.5 text-sm font-medium text-slate-600 first:bg-white first:text-slate-950 first:shadow-sm">{item}</span>)}</div>; }

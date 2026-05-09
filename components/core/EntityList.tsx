@@ -1,0 +1,1 @@
+export function EntityList<T extends { id: string }>({ items, renderItem }: { items: T[]; renderItem: (item: T) => React.ReactNode }) { return <div className="space-y-3">{items.map(item => <div key={item.id}>{renderItem(item)}</div>)}</div>; }

@@ -1,0 +1,2 @@
+import { Card } from "@/components/ui/Card";
+export function OnboardingChecklist({ steps }: { steps: string[] }) { return <Card><h3 className="font-semibold text-slate-950">Setup checklist</h3><div className="mt-3 space-y-2">{steps.map((step, i) => <div key={step} className="flex items-center gap-2 text-sm"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-xs">{i+1}</span>{step}</div>)}</div></Card>; }

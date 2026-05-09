@@ -1,0 +1,2 @@
+import { Badge } from "@/components/ui/Badge";
+export function StatusBadge({ status }: { status: string }) { const tone = status.includes("paid") || status.includes("active") || status.includes("accepted") ? "green" : status.includes("overdue") || status.includes("low") ? "red" : status.includes("pending") || status.includes("sent") ? "amber" : "slate"; return <Badge tone={tone as never}>{status.replace(/_/g, " ")}</Badge>; }

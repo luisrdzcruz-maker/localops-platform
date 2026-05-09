@@ -1,0 +1,2 @@
+import Link from "next/link";
+export function MobileNav() { return <nav className="fixed inset-x-3 bottom-3 z-30 grid grid-cols-4 rounded-2xl border border-slate-200 bg-white p-2 shadow-lg lg:hidden"><Link href="/dashboard" className="text-center text-xs">Home</Link><Link href="/contacts" className="text-center text-xs">Contacts</Link><Link href="/tasks" className="text-center text-xs">Tasks</Link><Link href="/settings" className="text-center text-xs">Settings</Link></nav>; }

@@ -1,0 +1,3 @@
+import { AppShell } from "@/components/shell/AppShell";
+import { exampleAutomationRules } from "@/lib/automations/examples";import { AutomationRuleCard } from "@/components/automations/AutomationRuleCard";import { AutomationBuilderPlaceholder } from "@/components/automations/AutomationBuilderPlaceholder";
+export default function Page() { return <AppShell><div className="space-y-6"><h1 className="text-2xl font-bold">Automations</h1><div className="grid gap-3 md:grid-cols-3">{exampleAutomationRules.map(r => <AutomationRuleCard key={r.id} rule={r} />)}</div><AutomationBuilderPlaceholder /></div></AppShell>; }
