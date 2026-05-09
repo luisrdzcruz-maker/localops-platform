@@ -1,0 +1,39 @@
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+:root {
+  color-scheme: light;
+  --pharmaops-bg: #f7faf9;
+  --pharmaops-fg: #0f172a;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--pharmaops-bg);
+  color: var(--pharmaops-fg);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Subtle focus ring tuned for the brand palette. */
+:focus-visible {
+  outline: 2px solid #3a8a73;
+  outline-offset: 2px;
+  border-radius: 6px;
+}

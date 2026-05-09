@@ -1,0 +1,5 @@
+Fecha,Vendor,Concepto,Categoria,Base,IVA,Total,Forma de pago,Estado
+05/05/2026,Suministros Electricos Demo,Suministro electrico abril,utilities,265.50,55.76,321.26,transfer,paid
+07/05/2026,Telecom Empresas Demo,Telefonia + internet abril,utilities,82.60,17.35,99.95,transfer,paid
+10/05/2026,Gestoria Demo,Asesoria mensual mayo,professional_services,278.00,58.38,336.38,transfer,paid
+03/05/2026,Inmobiliaria Demo SL,Alquiler local mayo,rent,1450.00,304.50,1754.50,transfer,paid

@@ -1,0 +1,6 @@
+NFactura,Proveedor,NIF,FechaFactura,FechaVencimiento,Base,IVA,Total,EstadoPago
+COO-20260418-001,Cooperativa Farmaceutica Demo,B00000001,18/04/2026,18/05/2026,1245.67,49.83,1295.50,pendiente
+COO-20260420-002,Cooperativa Farmaceutica Demo,B00000001,20/04/2026,20/05/2026,2876.12,115.04,2991.16,pendiente
+DIS-20260411-003,Distribuidor Sanitario Demo,B00000002,11/04/2026,11/05/2026,532.40,53.24,585.64,pagada
+DER-20260408-004,Dermocosmetica Norte Demo,B00000003,08/04/2026,23/05/2026,1140.80,239.57,1380.37,pendiente
+PAR-20260415-005,Parafarmacia Global Demo,B00000004,15/04/2026,15/05/2026,738.20,73.82,812.02,pagada
