@@ -2,14 +2,14 @@ import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-3xl flex-col justify-center px-6 py-12">
+    <main className="mx-auto flex min-h-screen max-w-3xl flex-col px-6 pb-16 pt-20 sm:pt-24 md:pt-28 lg:pt-32">
       <p className="text-sm font-medium uppercase tracking-wide text-brand-600">
         PharmaOps · MVP
       </p>
-      <h1 className="mt-3 text-4xl font-semibold text-ink-900">
+      <h1 className="mt-3 text-3xl font-semibold text-ink-900 sm:text-4xl">
         Control operativo de tu farmacia
       </h1>
-      <p className="mt-4 max-w-2xl text-lg text-ink-600">
+      <p className="mt-4 max-w-2xl text-base text-ink-600 sm:text-lg">
         Importa datos desde tu sistema, entiende márgenes, controla
         proveedores y prepara informes para tu gestoría — sin sustituir tu
         software oficial de farmacia.

@@ -1,37 +1,10 @@
 "use client";
 
-import {
-  BarChart3,
-  Building2,
-  FileSpreadsheet,
-  FilePieChart,
-  ListChecks,
-  PiggyBank,
-  Plug,
-  Settings,
-  Truck,
-  type LucideIcon,
-} from "lucide-react";
+import { Building2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils/cn";
-
-interface NavItem {
-  href: string;
-  label: string;
-  icon: LucideIcon;
-}
-
-const NAV: NavItem[] = [
-  { href: "/dashboard", label: "Panel", icon: BarChart3 },
-  { href: "/imports", label: "Importaciones", icon: FileSpreadsheet },
-  { href: "/suppliers", label: "Proveedores", icon: Truck },
-  { href: "/finance", label: "Finanzas", icon: PiggyBank },
-  { href: "/reports", label: "Informes", icon: FilePieChart },
-  { href: "/tasks", label: "Tareas", icon: ListChecks },
-  { href: "/integrations", label: "Integraciones", icon: Plug },
-  { href: "/settings", label: "Ajustes", icon: Settings },
-];
+import { NAV_ITEMS, isNavItemActive } from "./nav";
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -51,9 +24,8 @@ export function Sidebar() {
       </div>
 
       <nav className="flex flex-1 flex-col gap-0.5 px-3 pb-4">
-        {NAV.map((item) => {
-          const active =
-            pathname === item.href || pathname.startsWith(`${item.href}/`);
+        {NAV_ITEMS.map((item) => {
+          const active = isNavItemActive(item, pathname);
           const Icon = item.icon;
           return (
             <Link
