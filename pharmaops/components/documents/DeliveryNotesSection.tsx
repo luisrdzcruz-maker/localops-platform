@@ -208,10 +208,11 @@ export function DeliveryNotesSection({
                           size="sm"
                           className="h-7 justify-start px-2 text-[11px] text-ink-500"
                           disabled
+                          aria-disabled="true"
                           title="Próxima fase: comparar albarán con factura y detectar diferencias."
                         >
                           <GitCompare className="h-3 w-3" />
-                          Conciliar con factura
+                          Conciliar próximamente
                         </Button>
                       </div>
                     </TD>
