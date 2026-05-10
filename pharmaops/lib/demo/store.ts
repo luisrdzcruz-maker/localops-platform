@@ -33,6 +33,11 @@ import type { Task } from "@/types/tasks";
 import type { AuditLogEntry, UserProfile } from "@/types/localops";
 import type { DocumentRecord } from "@/types/documents";
 import type {
+  DeliveryNote,
+  DeliveryNoteLine,
+  DeliveryNoteStatus,
+} from "@/types/delivery-notes";
+import type {
   ExtractionStatus,
   InvoiceExtractionProposal,
 } from "@/lib/ocr/types";
@@ -63,6 +68,8 @@ export interface DemoStoreState {
   auditLogs: AuditLogEntry[];
   documents: DocumentRecord[];
   documentExtractions: InvoiceExtractionProposal[];
+  deliveryNotes: DeliveryNote[];
+  deliveryNoteLines: DeliveryNoteLine[];
 }
 
 function emptyState(): DemoStoreState {
@@ -86,6 +93,8 @@ function emptyState(): DemoStoreState {
     auditLogs: [],
     documents: [],
     documentExtractions: [],
+    deliveryNotes: [],
+    deliveryNoteLines: [],
   };
 }
 
@@ -111,6 +120,8 @@ function seededState(): DemoStoreState {
     auditLogs: seed.auditLogs,
     documents: seed.documents,
     documentExtractions: [],
+    deliveryNotes: seed.deliveryNotes,
+    deliveryNoteLines: seed.deliveryNoteLines,
   };
 }
 
@@ -347,6 +358,51 @@ export function saveDocumentExtraction(
         ...s.auditLogs,
       ],
     };
+  });
+}
+
+/* ----------------------------- Delivery notes ----------------------------- */
+
+/** Append a delivery note. Used by the manual "Registrar albarán" flow. */
+export function appendDeliveryNote(
+  note: DeliveryNote,
+  lines: DeliveryNoteLine[] = []
+): void {
+  setState((s) => ({
+    ...s,
+    deliveryNotes: [note, ...s.deliveryNotes],
+    deliveryNoteLines: [...lines, ...s.deliveryNoteLines],
+    auditLogs: [
+      {
+        id: `aud-${Date.now()}`,
+        workspaceId: s.pharmacy.id,
+        userId: s.user.id,
+        action: "delivery_note.registered",
+        entityType: "delivery_note",
+        entityId: note.id,
+        metadata: {
+          supplierName: note.supplierName,
+          deliveryNoteNumber: note.deliveryNoteNumber,
+          status: note.status,
+        },
+        createdAt: note.registeredAt,
+      },
+      ...s.auditLogs,
+    ],
+  }));
+}
+
+/** Update only the workflow status of an existing delivery note. */
+export function updateDeliveryNoteStatus(
+  id: DeliveryNote["id"],
+  status: DeliveryNoteStatus
+): void {
+  setState((s) => {
+    const idx = s.deliveryNotes.findIndex((n) => n.id === id);
+    if (idx === -1) return s;
+    const next = [...s.deliveryNotes];
+    next[idx] = { ...next[idx]!, status };
+    return { ...s, deliveryNotes: next };
   });
 }
 

@@ -37,6 +37,10 @@ import type { Report } from "@/types/reports";
 import type { Task } from "@/types/tasks";
 import type { AuditLogEntry } from "@/types/localops";
 import type { DocumentRecord } from "@/types/documents";
+import type {
+  DeliveryNote,
+  DeliveryNoteLine,
+} from "@/types/delivery-notes";
 
 const SEED = 19891204;
 
@@ -244,6 +248,8 @@ export interface DemoSeedData {
   importBatches: ImportBatch[];
   auditLogs: AuditLogEntry[];
   documents: DocumentRecord[];
+  deliveryNotes: DeliveryNote[];
+  deliveryNoteLines: DeliveryNoteLine[];
 }
 
 export function generateDemoSeed(reference?: Partial<SeedReferenceDate>): DemoSeedData {
@@ -273,6 +279,12 @@ export function generateDemoSeed(reference?: Partial<SeedReferenceDate>): DemoSe
   const reports = generateReports(today);
   const auditLogs = generateAuditLogs(today, importBatches, reports);
   const documents = generateDocuments(today, suppliers);
+  const { deliveryNotes, deliveryNoteLines } = generateDeliveryNotes(
+    today,
+    suppliers,
+    purchaseInvoices,
+    documents
+  );
 
   return {
     suppliers,
@@ -286,6 +298,8 @@ export function generateDemoSeed(reference?: Partial<SeedReferenceDate>): DemoSe
     importBatches,
     auditLogs,
     documents,
+    deliveryNotes,
+    deliveryNoteLines,
   };
 }
 
@@ -1140,4 +1154,195 @@ function generateDocuments(today: Date, suppliers: Supplier[]): DocumentRecord[]
     createdAt: isoTimestamp(new Date(doc.date)),
     ...doc,
   }));
+}
+
+/* ---------------------------- Delivery notes ----------------------------- */
+
+/**
+ * Deterministic delivery-note dataset that exercises every state the
+ * Albaranes workflow knows about. Counts:
+ *   - 7 albaranes across 4 suppliers
+ *   - 2 statuses pendiente_revision (one with no invoice yet)
+ *   - 1 con_incidencias (with detailed lines)
+ *   - 1 revisado pendiente_factura
+ *   - 1 asociado_factura (cuadra)
+ *   - 1 asociado_factura with diferencias_menores
+ *   - 1 cerrado
+ *
+ * One albarán deliberately points back to an uploaded document (the
+ * "albaran-distribuidor-202604.pdf" seed) so the UI can show the link
+ * between the document upload flow and the albarán log.
+ */
+function generateDeliveryNotes(
+  today: Date,
+  suppliers: Supplier[],
+  invoices: PurchaseInvoice[],
+  documents: DocumentRecord[]
+): { deliveryNotes: DeliveryNote[]; deliveryNoteLines: DeliveryNoteLine[] } {
+  const supplierAt = (i: number) => suppliers[i % suppliers.length]!;
+  const albaranDocument = documents.find((d) => d.type === "albaran") ?? null;
+  // Pick a couple of recent paid/pending invoices we can point to.
+  const sortedInvoices = [...invoices].sort((a, b) =>
+    a.invoiceDate < b.invoiceDate ? 1 : -1
+  );
+  const linkedInvoice = sortedInvoices[2] ?? sortedInvoices[0] ?? null;
+  const linkedInvoiceWithMinorDiff = sortedInvoices[5] ?? sortedInvoices[0] ?? null;
+
+  const seedNotes: Array<
+    Omit<DeliveryNote, "id" | "pharmacyId" | "registeredAt">
+  > = [
+    {
+      supplierName: supplierAt(0).name,
+      deliveryNoteNumber: "ALB-2026-04217",
+      deliveryDate: isoDate(subDays(today, 1)),
+      status: "pendiente_revision",
+      reconciliationStatus: "sin_factura",
+      estimatedAmount: 1230.5,
+      packageCount: 3,
+      relatedInvoiceNumber: null,
+      notes: "Reparto matinal. Pendiente de chequear caja 2 (parafarmacia).",
+      sourceDocumentId: null,
+    },
+    {
+      supplierName: supplierAt(2).name,
+      deliveryNoteNumber: "DERMO-2026-1844",
+      deliveryDate: isoDate(subDays(today, 2)),
+      status: "con_incidencias",
+      reconciliationStatus: "pendiente_conciliar",
+      estimatedAmount: 612.4,
+      packageCount: 1,
+      relatedInvoiceNumber: null,
+      notes:
+        "Sustitución de referencia y un envase con caducidad < 90 días. Detalle en líneas.",
+      sourceDocumentId: null,
+    },
+    {
+      supplierName: supplierAt(1).name,
+      deliveryNoteNumber: "DISTRI-2026-00872",
+      deliveryDate: isoDate(subDays(today, 3)),
+      status: "revisado",
+      reconciliationStatus: "pendiente_conciliar",
+      estimatedAmount: 482.1,
+      packageCount: 2,
+      relatedInvoiceNumber: null,
+      notes: "Mercancía revisada con conformidad. Esperando factura.",
+      sourceDocumentId: albaranDocument?.id ?? null,
+    },
+    {
+      supplierName: supplierAt(0).name,
+      deliveryNoteNumber: "ALB-2026-04188",
+      deliveryDate: isoDate(subDays(today, 5)),
+      status: "pendiente_factura",
+      reconciliationStatus: "pendiente_conciliar",
+      estimatedAmount: 1485.0,
+      packageCount: 4,
+      relatedInvoiceNumber: null,
+      notes: "Pendiente recibir factura quincenal del distribuidor.",
+      sourceDocumentId: null,
+    },
+    {
+      supplierName: supplierAt(1).name,
+      deliveryNoteNumber: "DISTRI-2026-00851",
+      deliveryDate: isoDate(subDays(today, 9)),
+      status: "asociado_factura",
+      reconciliationStatus: "cuadra",
+      estimatedAmount: linkedInvoice?.netAmount ?? 540,
+      packageCount: 2,
+      relatedInvoiceNumber: linkedInvoice?.invoiceNumber ?? "FAC-2026-001",
+      notes: null,
+      sourceDocumentId: null,
+    },
+    {
+      supplierName: supplierAt(3).name,
+      deliveryNoteNumber: "PARAF-2026-2207",
+      deliveryDate: isoDate(subDays(today, 11)),
+      status: "asociado_factura",
+      reconciliationStatus: "diferencias_menores",
+      estimatedAmount: (linkedInvoiceWithMinorDiff?.netAmount ?? 730) - 18.4,
+      packageCount: 3,
+      relatedInvoiceNumber:
+        linkedInvoiceWithMinorDiff?.invoiceNumber ?? "FAC-2026-014",
+      notes:
+        "Diferencia de 18,40 € en una referencia de parafarmacia. Pendiente de abono.",
+      sourceDocumentId: null,
+    },
+    {
+      supplierName: supplierAt(2).name,
+      deliveryNoteNumber: "DERMO-2026-1788",
+      deliveryDate: isoDate(subDays(today, 18)),
+      status: "cerrado",
+      reconciliationStatus: "cuadra",
+      estimatedAmount: 905.25,
+      packageCount: 2,
+      relatedInvoiceNumber: "DERMO-2026-FAC-077",
+      notes: null,
+      sourceDocumentId: null,
+    },
+  ];
+
+  const deliveryNotes: DeliveryNote[] = seedNotes.map((note, i) => ({
+    id: uuid("alb", i + 1),
+    pharmacyId: DEMO_PHARMACY.id,
+    registeredAt: isoTimestamp(new Date(note.deliveryDate)),
+    ...note,
+  }));
+
+  // Lines only for the albarán with incidencias and for the diferencias_menores
+  // one. The other albaranes intentionally have no line detail — most
+  // pharmacies will not capture line-level data on day one.
+  const lines: DeliveryNoteLine[] = [];
+  const incidenciasNote = deliveryNotes[1]!;
+  lines.push(
+    {
+      id: uuid("aln", 1),
+      deliveryNoteId: incidenciasNote.id,
+      productCode: "DERM002",
+      cnCode: "991002",
+      productName: "Protector solar SPF 50 200 ml",
+      orderedQuantity: 6,
+      receivedQuantity: 6,
+      acceptedQuantity: 5,
+      issueType: "caducidad_corta",
+      notes: "Un envase con caducidad < 90 días.",
+    },
+    {
+      id: uuid("aln", 2),
+      deliveryNoteId: incidenciasNote.id,
+      productCode: "DERM004",
+      cnCode: "991004",
+      productName: "Sérum vitamina C 30 ml",
+      orderedQuantity: 4,
+      receivedQuantity: 4,
+      acceptedQuantity: 4,
+      issueType: "sustitucion",
+      notes: "Sustituido por referencia equivalente del mismo laboratorio.",
+    },
+    {
+      id: uuid("aln", 3),
+      deliveryNoteId: incidenciasNote.id,
+      productCode: "DERM001",
+      cnCode: "991001",
+      productName: "Crema hidratante facial 50 ml",
+      orderedQuantity: 8,
+      receivedQuantity: 7,
+      acceptedQuantity: 7,
+      issueType: "falta_producto",
+      notes: "Falta 1 unidad respecto al pedido.",
+    }
+  );
+  const minorDiffNote = deliveryNotes[5]!;
+  lines.push({
+    id: uuid("aln", 4),
+    deliveryNoteId: minorDiffNote.id,
+    productCode: "INF001",
+    cnCode: "771001",
+    productName: "Pañales talla 3 (paquete)",
+    orderedQuantity: 12,
+    receivedQuantity: 12,
+    acceptedQuantity: 12,
+    issueType: "precio_dudoso",
+    notes: "Precio unitario factura 0,40 € superior al confirmado.",
+  });
+
+  return { deliveryNotes, deliveryNoteLines: lines };
 }

@@ -1,4 +1,4 @@
-import { ScrollText, Truck, Users } from "lucide-react";
+import { ScrollText, ShieldX, Truck } from "lucide-react";
 import { Alert } from "@/components/ui/Alert";
 import { Badge } from "@/components/ui/Badge";
 import {
@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/Card";
+import { ComingSoon } from "@/components/ui/ComingSoon";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { IntegrationCard } from "@/components/integrations/IntegrationCard";
 import { ADAPTERS } from "@/lib/integrations/registry";
@@ -37,7 +38,8 @@ export default function IntegrationsPage() {
         <Alert tone="info" title="Solo importación por fichero">
           PharmaOps no se conecta directamente a Unycop, Farmatic o Nixfarma en
           esta versión. La arquitectura de adaptadores está preparada para una
-          conexión directa futura, sujeta a validación técnica con tu proveedor IT.
+          conexión directa futura, sujeta a validación técnica con tu proveedor
+          IT y consentimiento legal de la farmacia.
         </Alert>
 
         <section className="grid gap-4 md:grid-cols-2">
@@ -51,66 +53,44 @@ export default function IntegrationsPage() {
           ))}
         </section>
 
-        <section className="grid gap-4 md:grid-cols-3">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <ScrollText className="h-4 w-4 text-brand-600" />
-                Gestoría
-              </CardTitle>
-              <CardDescription>
-                Comparte automáticamente el paquete mensual con tu gestoría.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Badge tone="warn" className="text-[10px]">
-                Próximamente
-              </Badge>
-            </CardContent>
-            <CardFooter className="text-xs text-ink-500">
-              MVP: descarga manual desde Informes → Paquete para gestoría.
-            </CardFooter>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Truck className="h-4 w-4 text-brand-600" />
-                Proveedores
-              </CardTitle>
-              <CardDescription>
-                Pedidos automáticos basados en stock y rotación.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Badge tone="warn" className="text-[10px]">
-                Próximamente
-              </Badge>
-            </CardContent>
-            <CardFooter className="text-xs text-ink-500">
-              Requiere acceso autorizado al sistema de pedidos del distribuidor.
-            </CardFooter>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-4 w-4 text-brand-600" />
-                VeriFactu / e-invoicing
-              </CardTitle>
-              <CardDescription>
-                Compatibilidad con la facturación electrónica certificada.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Badge tone="danger" className="text-[10px]">
-                No certificado
-              </Badge>
-            </CardContent>
-            <CardFooter className="text-xs text-ink-500">
-              PharmaOps MVP no certifica VeriFactu ni emite facturas oficiales.
-              La compatibilidad fiscal requiere certificación legal específica.
-            </CardFooter>
-          </Card>
-        </section>
+        <div className="flex flex-col gap-3">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-500">
+            Otras integraciones
+          </h2>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <ComingSoon
+              icon={<ScrollText className="h-3.5 w-3.5" />}
+              title="Gestoría"
+              description="Hoy: descarga manual del paquete mensual desde Informes → Paquete para gestoría. Pendiente: envío directo y feed cifrado para la asesoría."
+            />
+            <ComingSoon
+              icon={<Truck className="h-3.5 w-3.5" />}
+              title="Pedidos a proveedores"
+              description="Pendiente de validación con el distribuidor. Requiere acceso autorizado y plan piloto antes de cualquier piloto real."
+            />
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-sm">
+                  <ShieldX className="h-4 w-4 text-status-danger" />
+                  VeriFactu / e-invoicing
+                </CardTitle>
+                <CardDescription>
+                  Facturación electrónica certificada según la normativa AEAT.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Badge tone="danger" className="text-[10px]">
+                  No certificado
+                </Badge>
+              </CardContent>
+              <CardFooter className="text-xs text-ink-500">
+                PharmaOps no emite facturas oficiales ni certifica VeriFactu.
+                La compatibilidad fiscal requiere certificación específica y un
+                software homologado.
+              </CardFooter>
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

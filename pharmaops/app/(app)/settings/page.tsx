@@ -1,5 +1,4 @@
-import { Building2, FileSpreadsheet, ShieldCheck, Sparkles, Users } from "lucide-react";
-import { Alert } from "@/components/ui/Alert";
+import { Building2, FileSpreadsheet, Plug, ShieldCheck, Sparkles, Users } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import {
   Card,
@@ -8,11 +7,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/Card";
+import { ComingSoon } from "@/components/ui/ComingSoon";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/Table";
 import { DemoToggleBar } from "@/components/dashboard/DemoToggleBar";
 import { getDemoState } from "@/lib/demo/store";
 import { permissionsFor } from "@/lib/security/permissions";
+import {
+  getServiceBoundary,
+  SERVICE_CATEGORY_LABELS,
+  SERVICE_STATUS_LABELS,
+  SERVICE_STATUS_TONES,
+} from "@/lib/pharmaops/serviceBoundary";
 import {
   WORKSPACE_ROLES,
   type WorkspaceRole,
@@ -29,6 +35,7 @@ export const metadata = { title: "Ajustes · PharmaOps" };
 
 export default function SettingsPage() {
   const state = getDemoState();
+  const services = getServiceBoundary();
   return (
     <div className="flex flex-col">
       <PageHeader
@@ -191,21 +198,64 @@ export default function SettingsPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-brand-600" />
-              Branding de informes
+              <Plug className="h-4 w-4 text-brand-600" />
+              Servicios externos
             </CardTitle>
             <CardDescription>
-              Logo, pie de página y idioma por defecto del PDF.
+              Estado de las conexiones reales. La MVP corre en modo demo: los
+              servicios listados como mock o no conectados nunca llaman a un
+              proveedor externo desde esta aplicación.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Alert tone="info" title="Próximamente">
-              En esta versión MVP los informes usan la cabecera estándar
-              PharmaOps. La carga de logo y la edición del pie llegan en
-              próximas iteraciones.
-            </Alert>
+            <Table>
+              <THead>
+                <TR>
+                  <TH>Servicio</TH>
+                  <TH>Categoría</TH>
+                  <TH>Estado</TH>
+                  <TH>Notas</TH>
+                </TR>
+              </THead>
+              <TBody>
+                {services.map((service) => (
+                  <TR key={service.id}>
+                    <TD className="align-top">
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-sm font-medium text-ink-900">
+                          {service.label}
+                        </span>
+                        <span className="text-[11px] text-ink-500">
+                          {service.description}
+                        </span>
+                      </div>
+                    </TD>
+                    <TD className="align-top text-xs text-ink-600">
+                      {SERVICE_CATEGORY_LABELS[service.category]}
+                    </TD>
+                    <TD className="align-top">
+                      <Badge
+                        tone={SERVICE_STATUS_TONES[service.status]}
+                        className="text-[10px]"
+                      >
+                        {SERVICE_STATUS_LABELS[service.status]}
+                      </Badge>
+                    </TD>
+                    <TD className="align-top text-xs text-ink-600">
+                      {service.hint}
+                    </TD>
+                  </TR>
+                ))}
+              </TBody>
+            </Table>
           </CardContent>
         </Card>
+
+        <ComingSoon
+          icon={<Sparkles className="h-3.5 w-3.5" />}
+          title="Branding de informes"
+          description="En esta versión los informes usan la cabecera estándar PharmaOps. La carga de logo, el pie personalizado y el idioma por defecto del PDF llegan en próximas iteraciones."
+        />
       </div>
     </div>
   );

@@ -3,9 +3,11 @@ import { Alert } from "@/components/ui/Alert";
 import { Badge } from "@/components/ui/Badge";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Stat } from "@/components/ui/Stat";
+import { DeliveryNotesSection } from "@/components/documents/DeliveryNotesSection";
 import { DocumentsTable } from "@/components/documents/DocumentsTable";
 import { ExtractionPanel } from "@/components/documents/ExtractionPanel";
 import { UploadCards } from "@/components/documents/UploadCards";
+import { computeDeliveryNoteMetrics } from "@/lib/pharmaops/deliveryNotes";
 import { computeDocumentMetrics } from "@/lib/pharmaops/documents";
 import { getDemoState } from "@/lib/demo/store";
 import { resolveOcrProvider } from "@/lib/ocr/provider";
@@ -16,6 +18,7 @@ export const metadata = { title: "Documentos · PharmaOps" };
 export default function DocumentsPage() {
   const state = getDemoState();
   const metrics = computeDocumentMetrics(state.documents);
+  const deliveryNoteMetrics = computeDeliveryNoteMetrics(state.deliveryNotes);
   const extractions = state.documentExtractions;
   const ocr = resolveOcrProvider();
   const docById = new Map(state.documents.map((d) => [d.id, d] as const));
@@ -89,6 +92,11 @@ export default function DocumentsPage() {
         <DocumentsTable
           documents={state.documents}
           extractions={extractions}
+        />
+
+        <DeliveryNotesSection
+          notes={state.deliveryNotes}
+          metrics={deliveryNoteMetrics}
         />
 
         {extractions.length > 0 ? (

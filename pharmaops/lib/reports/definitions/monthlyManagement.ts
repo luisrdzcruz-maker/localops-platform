@@ -206,5 +206,7 @@ function pseudoState(input: ReportRenderInput): DemoStoreState {
     auditLogs: [],
     documents: [],
     documentExtractions: [],
+    deliveryNotes: [],
+    deliveryNoteLines: [],
   };
 }

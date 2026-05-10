@@ -56,7 +56,7 @@ function Hero() {
           Control operativo para farmacias, sin sustituir tu software actual
         </h1>
         <p className="mt-5 max-w-2xl text-base text-ink-600 sm:text-lg">
-          Importa datos, revisa márgenes, controla proveedores y genera
+          Importa datos, organiza facturas, revisa proveedores y genera
           informes de gestión desde una capa adicional preparada para
           integrarse con tu ecosistema actual.
         </p>
@@ -73,7 +73,7 @@ function Hero() {
             href="#modulos"
             className="inline-flex items-center gap-2 rounded-lg border border-ink-200 bg-white px-5 py-2.5 text-sm font-medium text-ink-700 shadow-card transition hover:bg-ink-50"
           >
-            Ver qué incluye
+            Ver módulos
           </a>
         </div>
 
@@ -238,7 +238,7 @@ const MODULES: Module[] = [
     icon: Receipt,
     title: "Documentos",
     body:
-      "Sube o fotografía facturas y documentos. En la versión avanzada, la extracción asistida propone proveedor, fecha, IVA y total para revisión.",
+      "Sube o fotografía facturas y documentos, registra albaranes y prepara su conciliación con facturas. La extracción asistida propone proveedor, fecha, IVA y total para revisión.",
   },
   {
     icon: Truck,

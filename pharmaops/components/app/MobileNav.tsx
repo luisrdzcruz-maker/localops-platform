@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
 import { cn } from "@/lib/utils/cn";
+import { DemoModePill } from "./DemoModePill";
 import { NAV_ITEMS, isNavItemActive } from "./nav";
 
 interface MobileNavProps {
@@ -83,11 +84,14 @@ export function MobileNav({
             </span>
           </div>
         </div>
-        <div
-          aria-label="Tu cuenta"
-          className="ml-auto flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-600 text-xs font-semibold text-white"
-        >
-          {userInitials}
+        <div className="ml-auto flex items-center gap-2">
+          <DemoModePill compact />
+          <div
+            aria-label="Tu cuenta"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-600 text-xs font-semibold text-white"
+          >
+            {userInitials}
+          </div>
         </div>
       </header>
 

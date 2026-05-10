@@ -61,8 +61,8 @@ export type AdapterStatus =
 export const ADAPTER_STATUS_LABELS: Record<AdapterStatus, string> = {
   active: "Activo",
   beta: "Beta",
-  file_based_only: "Solo importación por fichero",
-  planned: "Planificado",
+  file_based_only: "Importación por fichero",
+  planned: "Requiere validación",
   blocked: "Bloqueado",
 };
 

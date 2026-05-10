@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { DeliveryNotesSignal } from "@/components/dashboard/DeliveryNotesSignal";
 import { DemoToggleBar } from "@/components/dashboard/DemoToggleBar";
 import { DocumentsSummary } from "@/components/dashboard/DocumentsSummary";
 import { KpiCards } from "@/components/dashboard/KpiCards";
@@ -23,6 +24,7 @@ import {
   buildSalesVsPurchasesSeries,
   buildSupplierSpendSeries,
 } from "@/lib/analytics/timeseries";
+import { computeDeliveryNoteMetrics } from "@/lib/pharmaops/deliveryNotes";
 import { computeDocumentMetrics } from "@/lib/pharmaops/documents";
 import { getDemoState } from "@/lib/demo/store";
 
@@ -70,6 +72,7 @@ export default function DashboardPage() {
     state.documents,
     state.documentExtractions
   );
+  const deliveryNoteMetrics = computeDeliveryNoteMetrics(state.deliveryNotes);
 
   return (
     <div className="flex flex-col">
@@ -126,6 +129,7 @@ export default function DashboardPage() {
         </div>
 
         <DocumentsSummary metrics={documentMetrics} />
+        <DeliveryNotesSignal metrics={deliveryNoteMetrics} />
 
         <div className="grid gap-4 lg:grid-cols-2">
           <RecentImportsCard batches={state.importBatches} />

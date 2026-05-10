@@ -1,6 +1,7 @@
 "use client";
 
 import { Bell, Search } from "lucide-react";
+import { DemoModePill } from "./DemoModePill";
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 
 interface TopbarProps {
@@ -19,6 +20,7 @@ export function Topbar({
       <WorkspaceSwitcher pharmacyName={pharmacyName} province={province} />
 
       <div className="ml-auto flex items-center gap-2">
+        <DemoModePill className="hidden md:inline-flex" />
         <div className="hidden items-center gap-2 rounded-lg border border-ink-200 bg-white px-3 py-1.5 text-sm text-ink-500 shadow-card md:flex">
           <Search className="h-4 w-4 text-ink-400" />
           <input
