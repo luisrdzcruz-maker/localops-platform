@@ -20,20 +20,21 @@ export function DocumentsSummary({ metrics }: { metrics: DocumentMetrics }) {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between gap-2">
-          <div>
-            <CardTitle className="flex items-center gap-2">
-              <Receipt className="h-4 w-4 text-brand-600" />
-              Documentos
+          <div className="min-w-0 flex-1">
+            <CardTitle className="flex items-center gap-2 truncate">
+              <Receipt className="h-4 w-4 shrink-0 text-brand-600" />
+              <span className="truncate">Documentos</span>
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="hidden sm:block">
               Facturas, tickets, albaranes y documentos para gestoría.
             </CardDescription>
           </div>
           <Link
             href="/documents"
-            className="inline-flex items-center gap-1 text-xs font-medium text-brand-700 hover:underline"
+            className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-brand-700 hover:underline"
           >
-            Ir a documentos
+            <span className="hidden sm:inline">Ir a documentos</span>
+            <span className="sm:hidden">Ver</span>
             <ArrowRight className="h-3 w-3" />
           </Link>
         </div>
@@ -81,11 +82,13 @@ function Counter({
     ok: "border-status-ok/20 bg-status-okBg/60 text-status-ok",
   }[tone];
   return (
-    <div className={`flex flex-col gap-1 rounded-lg border ${toneClass} p-3`}>
-      <p className="text-[10px] font-medium uppercase tracking-wide opacity-80">
+    <div
+      className={`flex min-w-0 flex-col gap-1 overflow-hidden rounded-lg border ${toneClass} p-3`}
+    >
+      <p className="truncate text-[10px] font-medium uppercase tracking-wide opacity-80">
         {label}
       </p>
-      <p className="text-xl font-semibold">{formatNumber(value)}</p>
+      <p className="truncate text-xl font-semibold">{formatNumber(value)}</p>
     </div>
   );
 }

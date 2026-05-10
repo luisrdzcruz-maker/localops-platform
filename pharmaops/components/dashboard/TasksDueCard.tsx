@@ -33,18 +33,18 @@ export function TasksDueCard({ tasks }: { tasks: Task[] }) {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between gap-2">
-          <div>
-            <CardTitle className="flex items-center gap-2">
-              <ListChecks className="h-4 w-4 text-brand-600" />
-              Tareas por vencer
+          <div className="min-w-0 flex-1">
+            <CardTitle className="flex items-center gap-2 truncate">
+              <ListChecks className="h-4 w-4 shrink-0 text-brand-600" />
+              <span className="truncate">Tareas por vencer</span>
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="hidden sm:block">
               Pagos a proveedores, revisiones y preparación para gestoría.
             </CardDescription>
           </div>
           <Link
             href="/tasks"
-            className="text-xs font-medium text-brand-700 hover:underline"
+            className="shrink-0 text-xs font-medium text-brand-700 hover:underline"
           >
             Ver todas
           </Link>

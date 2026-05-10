@@ -20,19 +20,23 @@ export function Stat({
   return (
     <div
       className={cn(
-        "flex flex-col gap-1 rounded-xl border border-ink-200 bg-white p-5 shadow-card",
+        // min-w-0 lets the card shrink inside flex/grid parents so the inner
+        // truncate utilities actually clip instead of pushing the layout.
+        "flex min-w-0 flex-col gap-1 overflow-hidden rounded-xl border border-ink-200 bg-white p-5 shadow-card",
         className
       )}
       {...props}
     >
       <div className="flex items-start justify-between gap-2">
-        <p className="text-xs font-medium uppercase tracking-wide text-ink-500">
+        <div className="min-w-0 flex-1 truncate text-xs font-medium uppercase tracking-wide text-ink-500">
           {label}
-        </p>
-        {trailing}
+        </div>
+        {trailing ? <div className="shrink-0">{trailing}</div> : null}
       </div>
-      <p className="text-2xl font-semibold text-ink-900">{value}</p>
-      {hint ? <p className="text-xs text-ink-500">{hint}</p> : null}
+      <p className="truncate text-2xl font-semibold text-ink-900">{value}</p>
+      {hint ? (
+        <p className="truncate text-xs text-ink-500">{hint}</p>
+      ) : null}
     </div>
   );
 }

@@ -36,18 +36,18 @@ export function RecentImportsCard({ batches }: Props) {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between gap-2">
-          <div>
-            <CardTitle className="flex items-center gap-2">
-              <FileSpreadsheet className="h-4 w-4 text-brand-600" />
-              Importaciones recientes
+          <div className="min-w-0 flex-1">
+            <CardTitle className="flex items-center gap-2 truncate">
+              <FileSpreadsheet className="h-4 w-4 shrink-0 text-brand-600" />
+              <span className="truncate">Importaciones recientes</span>
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="hidden sm:block">
               Últimos lotes subidos desde Unycop, Farmatic o ficheros genéricos.
             </CardDescription>
           </div>
           <Link
             href="/imports"
-            className="text-xs font-medium text-brand-700 hover:underline"
+            className="shrink-0 text-xs font-medium text-brand-700 hover:underline"
           >
             Ver todas
           </Link>
@@ -67,7 +67,7 @@ export function RecentImportsCard({ batches }: Props) {
                   <p className="truncate text-sm font-medium text-ink-900">
                     {b.originalFilename}
                   </p>
-                  <p className="text-xs text-ink-500">
+                  <p className="truncate text-xs text-ink-500">
                     {SOURCE_SYSTEM_LABELS[b.sourceSystem]} ·{" "}
                     {IMPORT_TYPE_LABELS[
                       b.importType as keyof typeof IMPORT_TYPE_LABELS
