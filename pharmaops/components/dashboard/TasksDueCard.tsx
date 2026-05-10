@@ -11,6 +11,7 @@ import {
 import {
   TASK_PRIORITY_LABELS,
   type Task,
+  type TaskCategory,
   type TaskPriority,
 } from "@/types/tasks";
 import { formatRelative } from "@/lib/utils/format";
@@ -21,6 +22,75 @@ const PRIORITY_TONE: Record<TaskPriority, "ok" | "warn" | "danger" | "neutral"> 
   high: "warn",
   urgent: "danger",
 };
+
+/**
+ * Short Spanish category labels used in the mobile metadata line. Different
+ * from TASK_CATEGORY_LABELS, which is used everywhere else and reads more
+ * formal ("Pago a proveedor"). Mobile rows need 1–2 words.
+ */
+const CATEGORY_SHORT: Record<TaskCategory, string> = {
+  supplier_payment: "Proveedor",
+  stock_review: "Stock",
+  accountant: "Gestoría",
+  import: "Importación",
+  document: "Documento",
+  compliance: "Cumplimiento",
+  general: "General",
+};
+
+/**
+ * Build a compact metadata line for the mobile dashboard row.
+ *
+ * Pattern: "<contextual cue> · <category>". Cues come from cheap regex
+ * matches over the task title + description so we never show a full long
+ * sentence on a 390px viewport. Falls back to just the category label when
+ * no cue matches.
+ */
+function deriveMobileSummary(task: Task): string {
+  const cat = CATEGORY_SHORT[task.category];
+  const text = `${task.title} ${task.description ?? ""}`.toLowerCase();
+
+  // Numeric cues — "4 errores", "6 referencias", "3 facturas".
+  const errMatch = text.match(
+    /(\d+)\s+(?:filas?\s+con\s+)?(error|errores|aviso|avisos)/
+  );
+  if (errMatch) return `${errMatch[1]} ${errMatch[2]} · ${cat}`;
+  const countMatch = text.match(
+    /(\d+)\s+(referencia|referencias|producto|productos|factura|facturas)/
+  );
+  if (countMatch) return `${countMatch[1]} ${countMatch[2]} · ${cat}`;
+
+  // Phrase cues, ordered most-specific first.
+  if (text.includes("pdf") && text.includes("excel")) {
+    return `PDF + Excel · ${cat}`;
+  }
+  if (/plantilla[^.]*\bunycop\b|\bunycop\b[^.]*plantilla/.test(text)) {
+    return `Plantilla Unycop · ${cat}`;
+  }
+  if (/plantilla[^.]*\bfarmatic\b|\bfarmatic\b[^.]*plantilla/.test(text)) {
+    return `Plantilla Farmatic · ${cat}`;
+  }
+  if (/plantilla[^.]*\bnixfarma\b|\bnixfarma\b[^.]*plantilla/.test(text)) {
+    return `Plantilla Nixfarma · ${cat}`;
+  }
+  if (text.includes("plantilla")) return `Plantilla · ${cat}`;
+  if (text.includes("paquete") && text.includes("gestor")) {
+    return `Paquete gestoría · ${cat}`;
+  }
+  if (text.includes("paquete")) return `Paquete · ${cat}`;
+  if (/factura[^.]*\b(pendiente|pendientes|revisar)\b/.test(text)) {
+    return `Factura pendiente · ${cat}`;
+  }
+  if (text.includes("caducar") || text.includes("caducidad")) {
+    return `Caducidades · ${cat}`;
+  }
+  if (text.includes("negociar") || text.includes("renegociar")) {
+    return `Negociación · ${cat}`;
+  }
+  if (task.category === "compliance") return `Política · ${cat}`;
+
+  return cat;
+}
 
 export function TasksDueCard({ tasks }: { tasks: Task[] }) {
   const upcoming = tasks
@@ -64,8 +134,13 @@ export function TasksDueCard({ tasks }: { tasks: Task[] }) {
                   <p className="truncate text-sm font-medium text-ink-900">
                     {t.title}
                   </p>
+                  {/* Mobile-only compact metadata. Hidden at sm+ so the
+                      desktop row keeps the full description below. */}
+                  <p className="truncate text-xs text-ink-500 sm:hidden">
+                    {deriveMobileSummary(t)}
+                  </p>
                   {t.description ? (
-                    <p className="line-clamp-1 text-xs text-ink-500">
+                    <p className="hidden line-clamp-1 text-xs text-ink-500 sm:block">
                       {t.description}
                     </p>
                   ) : null}
