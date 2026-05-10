@@ -12,6 +12,7 @@ import {
 import { EmptyState } from "@/components/ui/EmptyState";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { DemoToggleBar } from "@/components/dashboard/DemoToggleBar";
+import { DocumentsSummary } from "@/components/dashboard/DocumentsSummary";
 import { KpiCards } from "@/components/dashboard/KpiCards";
 import { RecentImportsCard } from "@/components/dashboard/RecentImportsCard";
 import { SalesVsPurchasesChart } from "@/components/dashboard/SalesVsPurchasesChart";
@@ -22,6 +23,7 @@ import {
   buildSalesVsPurchasesSeries,
   buildSupplierSpendSeries,
 } from "@/lib/analytics/timeseries";
+import { computeDocumentMetrics } from "@/lib/pharmaops/documents";
 import { getDemoState } from "@/lib/demo/store";
 
 export const metadata = { title: "Panel · PharmaOps" };
@@ -64,6 +66,10 @@ export default function DashboardPage() {
   const kpis = computeDashboardKpis(state);
   const salesVsPurchases = buildSalesVsPurchasesSeries(state);
   const supplierSpend = buildSupplierSpendSeries(state);
+  const documentMetrics = computeDocumentMetrics(
+    state.documents,
+    state.documentExtractions
+  );
 
   return (
     <div className="flex flex-col">
@@ -118,6 +124,8 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         </div>
+
+        <DocumentsSummary metrics={documentMetrics} />
 
         <div className="grid gap-4 lg:grid-cols-2">
           <RecentImportsCard batches={state.importBatches} />

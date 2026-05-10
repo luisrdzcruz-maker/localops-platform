@@ -36,6 +36,7 @@ import type { ImportBatch } from "@/types/imports";
 import type { Report } from "@/types/reports";
 import type { Task } from "@/types/tasks";
 import type { AuditLogEntry } from "@/types/localops";
+import type { DocumentRecord } from "@/types/documents";
 
 const SEED = 19891204;
 
@@ -242,6 +243,7 @@ export interface DemoSeedData {
   reports: Report[];
   importBatches: ImportBatch[];
   auditLogs: AuditLogEntry[];
+  documents: DocumentRecord[];
 }
 
 export function generateDemoSeed(reference?: Partial<SeedReferenceDate>): DemoSeedData {
@@ -270,6 +272,7 @@ export function generateDemoSeed(reference?: Partial<SeedReferenceDate>): DemoSe
   const tasks = generateTasks(today, suppliers);
   const reports = generateReports(today);
   const auditLogs = generateAuditLogs(today, importBatches, reports);
+  const documents = generateDocuments(today, suppliers);
 
   return {
     suppliers,
@@ -282,6 +285,7 @@ export function generateDemoSeed(reference?: Partial<SeedReferenceDate>): DemoSe
     reports,
     importBatches,
     auditLogs,
+    documents,
   };
 }
 
@@ -1012,4 +1016,128 @@ function generateAuditLogs(
   }
   void today;
   return entries.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+}
+
+/* --------------------------------- Documents ----------------------------- */
+
+/**
+ * Demo documents — a small fixed list so the Documentos page never feels
+ * empty. No real files; only metadata. The "demo_seed" source flags these
+ * as preloaded so a real upload on top of them stands out.
+ */
+function generateDocuments(today: Date, suppliers: Supplier[]): DocumentRecord[] {
+  const list: Array<Omit<DocumentRecord, "id" | "pharmacyId" | "createdAt">> = [
+    {
+      date: isoDate(subDays(today, 1)),
+      type: "factura_proveedor",
+      supplierName: suppliers[0]!.name,
+      category: "Compras",
+      status: "pendiente_revisar",
+      estimatedAmount: 1245.5,
+      source: "demo_seed",
+      fileName: "factura-cooperativa-202604-001.pdf",
+      fileSize: 184_320,
+      mimeType: "application/pdf",
+      notes: null,
+    },
+    {
+      date: isoDate(subDays(today, 2)),
+      type: "factura_proveedor",
+      supplierName: suppliers[1]!.name,
+      category: "Compras",
+      status: "revisado",
+      estimatedAmount: 532.4,
+      source: "demo_seed",
+      fileName: "factura-distribuidor-202604-003.pdf",
+      fileSize: 142_080,
+      mimeType: "application/pdf",
+      notes: "Cuadrar con albarán adjunto.",
+    },
+    {
+      date: isoDate(subDays(today, 3)),
+      type: "albaran",
+      supplierName: suppliers[1]!.name,
+      category: "Compras",
+      status: "asociado_gasto",
+      estimatedAmount: null,
+      source: "demo_seed",
+      fileName: "albaran-distribuidor-202604.pdf",
+      fileSize: 98_240,
+      mimeType: "application/pdf",
+      notes: null,
+    },
+    {
+      date: isoDate(subDays(today, 5)),
+      type: "ticket_gasto",
+      supplierName: "Suministros Eléctricos Demo",
+      category: "Suministros",
+      status: "pendiente_revisar",
+      estimatedAmount: 32.15,
+      source: "demo_seed",
+      fileName: "ticket-suministros-202605-05.jpg",
+      fileSize: 412_672,
+      mimeType: "image/jpeg",
+      notes: null,
+    },
+    {
+      date: isoDate(subDays(today, 7)),
+      type: "factura_proveedor",
+      supplierName: suppliers[2]!.name,
+      category: "Compras",
+      status: "listo_gestoria",
+      estimatedAmount: 1140.8,
+      source: "demo_seed",
+      fileName: "factura-dermo-202604-014.pdf",
+      fileSize: 156_672,
+      mimeType: "application/pdf",
+      notes: null,
+    },
+    {
+      date: isoDate(subDays(today, 8)),
+      type: "documento_gestoria",
+      supplierName: null,
+      category: "Gestoría",
+      status: "listo_gestoria",
+      estimatedAmount: null,
+      source: "demo_seed",
+      fileName: "paquete-gestoria-marzo-2026.xlsx",
+      fileSize: 64_000,
+      mimeType:
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      notes: "Generado desde Informes → Paquete para gestoría.",
+    },
+    {
+      date: isoDate(subDays(today, 11)),
+      type: "ticket_gasto",
+      supplierName: "Telecom Empresas Demo",
+      category: "Suministros",
+      status: "asociado_gasto",
+      estimatedAmount: 99.95,
+      source: "demo_seed",
+      fileName: "ticket-telecom-abril.pdf",
+      fileSize: 88_064,
+      mimeType: "application/pdf",
+      notes: null,
+    },
+    {
+      date: isoDate(subDays(today, 14)),
+      type: "factura_proveedor",
+      supplierName: suppliers[3]!.name,
+      category: "Compras",
+      status: "revisado",
+      estimatedAmount: 738.2,
+      source: "demo_seed",
+      fileName: "factura-parafarmacia-202604-008.pdf",
+      fileSize: 132_096,
+      mimeType: "application/pdf",
+      notes: null,
+    },
+  ];
+
+  return list.map((doc, i) => ({
+    id: uuid("doc", i + 1),
+    pharmacyId: DEMO_PHARMACY.id,
+    createdAt: isoTimestamp(new Date(doc.date)),
+    ...doc,
+  }));
 }

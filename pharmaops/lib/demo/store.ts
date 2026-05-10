@@ -31,6 +31,11 @@ import type {
 import type { Report } from "@/types/reports";
 import type { Task } from "@/types/tasks";
 import type { AuditLogEntry, UserProfile } from "@/types/localops";
+import type { DocumentRecord } from "@/types/documents";
+import type {
+  ExtractionStatus,
+  InvoiceExtractionProposal,
+} from "@/lib/ocr/types";
 import {
   DEMO_MEMBERSHIP,
   DEMO_PHARMACY,
@@ -56,6 +61,8 @@ export interface DemoStoreState {
   reports: Report[];
   tasks: Task[];
   auditLogs: AuditLogEntry[];
+  documents: DocumentRecord[];
+  documentExtractions: InvoiceExtractionProposal[];
 }
 
 function emptyState(): DemoStoreState {
@@ -77,6 +84,8 @@ function emptyState(): DemoStoreState {
     reports: [],
     tasks: [],
     auditLogs: [],
+    documents: [],
+    documentExtractions: [],
   };
 }
 
@@ -100,6 +109,8 @@ function seededState(): DemoStoreState {
     reports: seed.reports,
     tasks: seed.tasks,
     auditLogs: seed.auditLogs,
+    documents: seed.documents,
+    documentExtractions: [],
   };
 }
 
@@ -251,6 +262,108 @@ export function upsertSupplier(supplier: Supplier): void {
 /** Insert an expense. */
 export function appendExpense(expense: Expense): void {
   setState((s) => ({ ...s, expenses: [expense, ...s.expenses] }));
+}
+
+/** Insert a new document record (only metadata — no file blob is stored). */
+export function appendDocument(document: DocumentRecord): void {
+  setState((s) => ({
+    ...s,
+    documents: [document, ...s.documents],
+    auditLogs: [
+      {
+        id: `aud-${Date.now()}`,
+        workspaceId: s.pharmacy.id,
+        userId: s.user.id,
+        action: "document.uploaded",
+        entityType: "document",
+        entityId: document.id,
+        metadata: {
+          type: document.type,
+          source: document.source,
+          fileName: document.fileName,
+        },
+        createdAt: document.createdAt,
+      },
+      ...s.auditLogs,
+    ],
+  }));
+}
+
+/** Update a document's status. */
+export function updateDocumentStatus(
+  id: DocumentRecord["id"],
+  status: DocumentRecord["status"]
+): void {
+  setState((s) => {
+    const idx = s.documents.findIndex((d) => d.id === id);
+    if (idx === -1) return s;
+    const next = [...s.documents];
+    next[idx] = { ...next[idx]!, status };
+    return { ...s, documents: next };
+  });
+}
+
+/* --------------------- OCR extraction proposals --------------------------- */
+
+/** Look up the extraction proposal for a given documentId, if any. */
+export function getDocumentExtraction(
+  documentId: string
+): InvoiceExtractionProposal | null {
+  const state = getState();
+  return (
+    state.documentExtractions.find((e) => e.documentId === documentId) ?? null
+  );
+}
+
+/**
+ * Save (insert or replace) an extraction proposal. There is at most one
+ * proposal per document — a re-run replaces the previous one.
+ */
+export function saveDocumentExtraction(
+  proposal: InvoiceExtractionProposal
+): void {
+  setState((s) => {
+    const others = s.documentExtractions.filter(
+      (e) => e.documentId !== proposal.documentId
+    );
+    return {
+      ...s,
+      documentExtractions: [proposal, ...others],
+      auditLogs: [
+        {
+          id: `aud-${Date.now()}`,
+          workspaceId: s.pharmacy.id,
+          userId: s.user.id,
+          action: "document.extraction.saved",
+          entityType: "document",
+          entityId: proposal.documentId,
+          metadata: {
+            provider: proposal.provider,
+            status: proposal.status,
+            warnings: proposal.warnings.length,
+          },
+          createdAt: proposal.extractedAt,
+        },
+        ...s.auditLogs,
+      ],
+    };
+  });
+}
+
+/** Update only the status of an existing proposal. */
+export function updateDocumentExtractionStatus(
+  documentId: string,
+  status: ExtractionStatus
+): void {
+  setState((s) => {
+    const idx = s.documentExtractions.findIndex(
+      (e) => e.documentId === documentId
+    );
+    if (idx === -1) return s;
+    const next = [...s.documentExtractions];
+    next[idx] = { ...next[idx]!, status };
+    return { ...s, documentExtractions: next };
+  });
 }
 
 function dedupeBy<T>(items: T[], keyOf: (item: T) => string): T[] {

@@ -12,6 +12,7 @@ import {
   ListChecks,
   PiggyBank,
   Plug,
+  Receipt,
   Settings,
   Truck,
   type LucideIcon,
@@ -26,6 +27,7 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard", label: "Panel", icon: BarChart3 },
   { href: "/imports", label: "Importaciones", icon: FileSpreadsheet },
+  { href: "/documents", label: "Documentos", icon: Receipt },
   { href: "/suppliers", label: "Proveedores", icon: Truck },
   { href: "/finance", label: "Finanzas", icon: PiggyBank },
   { href: "/reports", label: "Informes", icon: FilePieChart },
